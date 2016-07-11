@@ -1,0 +1,50 @@
+{
+    "query": {
+        "bool": {
+            "filter": {
+                "range": {
+                    "@timestamp": {
+                        "gte": "2016-07-11T11:24:50",
+                        "lt": "2016-07-11T11:25:59"
+                    },
+                    "_cache": false
+                }
+            },
+            "must": {
+                "query_string": {
+                    "query": "err OR error OR exception OR failure OR timeout",
+                    "default_operator": "AND"
+                }
+            }
+        }
+    },
+    "aggs": {
+        "date_agg": {
+            "date_histogram": {
+                "field": "@timestamp",
+                "interval": "10s"
+            }
+        }
+    },
+    "sort": {
+        "@timestamp": {
+            "order": "desc",
+            "ignore_unmapped": true
+        }
+    },
+    "highlight": {
+        "number_of_fragments": 10,
+        "fragment_size": 15000,
+        "pre_tags": [
+            "@logsene-highlight-start@"
+        ],
+        "post_tags": [
+            "@logsene-highlight-end@"
+        ],
+        "fields": {
+            "@timestamp": {},
+            "_source": {},
+            "_index": {}
+        }
+    }
+}
